@@ -56,3 +56,6 @@ end
 30.times do |n|
 	puts rows[n]
 end
+
+#Conference
+#http://www.nhl.com/ice/standings.htm?type=con#&navid=nav-stn-conf
