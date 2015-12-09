@@ -39,7 +39,15 @@ rows = []
 @doc.xpath('//table/tbody/tr').each_with_index do |x, i|
 	rows[i] = Hash.new('Rank')
 	x.xpath('td').each_with_index do |td, j|
-		title = headers[j].empty? ? 'Rank' : headers[j]
+		# title = headers[j].empty? ? 'Rank' : headers[j]
+
+		if ( headers[j].empty? )
+			title = 'Rank'
+		elsif ( headers[j] == 'Atlantic')
+			title = 'Team'
+		else
+			title = headers[j]
+		end
 		rows[i][title] = td.text
 	end
 end
