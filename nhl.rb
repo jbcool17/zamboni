@@ -2,26 +2,49 @@ require 'nokogiri'
 require 'open-uri'
 
 # Connet to 
-doc = Nokogiri::HTML(open("http://www.nhl.com/ice/standings.htm"));
+@doc = Nokogiri::HTML(open("http://www.nhl.com/ice/standings.htm"));
 # doc = Nokogiri::HTML(open("http://www.nhl.com")); - doesn't want to work
 
-teamMenu = doc.css("div#teamMenu")
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#ALL TEAM LINKS
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def get_team_homepage()
+	teamMenu = @doc.css("div#teamMenu")
+	teams = [];
+	teamMenu.children.each do |team|
+		teams<< team
+	end
 
-teams = [];
-teamMenu.children.each do |team|
-	teams<< team
+	teams.each do |team|
+		puts team.attributes['href'].value
+	end
+
+	return teams
 end
 
-def get_team_homepage(list)
+get_team_homepage()
 
-	list.each do |team|
-		puts team.attributes['href'].value
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#STANDING by Division
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@doc.css('table.standings') # returns 4
+
+headers = []
+@doc.xpath('//table/thead/tr/th').each do |x|
+	headers<< x.text
+end
+
+rows = []
+
+@doc.xpath('//table/tbody/tr').each_with_index do |x, i|
+	rows[i] = Hash.new('Rank')
+	x.xpath('td').each_with_index do |td, j|
+		title = headers[j].empty? ? 'Rank' : headers[j]
+		rows[i][title] = td.text
 	end
 end
 
-get_team_homepage(teams)
-
-
-#Getting Standings Data frin table
-doc.css('table.standings') # returns 4
-
+	# Output all teams
+30.times do |n|
+	puts rows[n]
+end
