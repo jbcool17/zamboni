@@ -63,9 +63,12 @@ end
 	end
 end
 
+
+
+
+
 def team_stats()
-	puts @teams, "Choose a Team?"
-	team = gets.chomp
+	
 	@rows.each do |record|
 		if ( record["Team"] == team )
 			@output = [record["Team"], record["W"], record["L"], record["OT"]]
