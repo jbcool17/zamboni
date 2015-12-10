@@ -48,7 +48,7 @@ rows = []
 		else
 			title = headers[j]
 		end
-		rows[i][title] = td.text
+		rows[i][title.gsub(/\s/, '')] = td.text
 	end
 end
 
