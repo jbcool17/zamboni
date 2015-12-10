@@ -22,40 +22,63 @@ def get_team_homepage()
 	return teams
 end
 
-get_team_homepage()
+# get_team_homepage()
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #STANDING by Division
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @doc.css('table.standings') # returns 4
 
-headers = []
+	#Getting Colum Titles
+standings_headers = []
 @doc.xpath('//table/thead/tr/th').each do |x|
-	headers<< x.text
+	standings_headers<< x.text
 end
 
-rows = []
-
+@rows = []
+@teams = []
 @doc.xpath('//table/tbody/tr').each_with_index do |x, i|
-	rows[i] = Hash.new('Rank')
-	x.xpath('td').each_with_index do |td, j|
-		# title = headers[j].empty? ? 'Rank' : headers[j]
 
-		if ( headers[j].empty? )
+	@rows[i] = Hash.new()
+	x.xpath('td').each_with_index do |td, j|
+
+		if ( standings_headers[j].empty? )
 			title = 'Rank'
-		elsif ( headers[j] == 'Atlantic')
+			info = td.text
+		elsif ( standings_headers[j] == 'Atlantic')
 			title = 'Team'
+			team_name = td.text.split('')
+			team_name.reverse!
+			team_name.pop()
+			team_name.reverse!
+			@teams<< team_name.join('')
+
+			info = team_name.join('')
 		else
-			title = headers[j]
-		end
-		rows[i][title.gsub(/\s/, '')] = td.text
+			title = standings_headers[j]
+			info = td.text
+		end		
+
+		@rows[i][title.gsub(/\s/, '')] = info
 	end
 end
 
-	# Output all teams
-30.times do |n|
-	puts rows[n]
+def team_stats()
+	puts @teams, "Choose a Team?"
+	team = gets.chomp
+	@rows.each do |record|
+		if ( record["Team"] == team )
+			@output = [record["Team"], record["W"], record["L"], record["OT"]]
+		end
+	end
+
+	if ( @output.nil? )
+		puts 'Not Found'
+	end
+	puts @output
 end
 
+
+team_stats()
 #Conference
 #http://www.nhl.com/ice/standings.htm?type=con#&navid=nav-stn-conf
