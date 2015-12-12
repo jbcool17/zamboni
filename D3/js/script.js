@@ -8,7 +8,7 @@ var nhlData = [{"Rank": 1, "Team": "Rangers", "GP":28, "W": 50, "L": 6, "OT": 3}
 				{"Rank": 7, "Team": "Oilers", "GP":28, "W": 5, "L": 19, "OT": 3},
 				{"Rank": 8, "Team": "RedWings", "GP":28, "W": 20, "L": 19, "OT": 3},
 				{"Rank": 9, "Team": "Flames", "GP":28, "W": 13, "L": 19, "OT": 3},
-				{"Rank": 10, "Team": "Pathers", "GP":28, "W": 12, "L": 19, "OT": 3}]
+				{"Rank": 10, "Team": "Pathers", "GP":28, "W": 12, "L": 19, "OT": 3}];
 
 				
 // for (var i = 0; i < 50; i++) {
@@ -31,7 +31,7 @@ var yScale = d3.scale.linear()
 //+++++++++++++++++++++++++++++++++++++++++++++++++
 //CHART ONE
 //+++++++++++++++++++++++++++++++++++++++++++++++++
-var chart = d3.select('#chart-one').append('svg')
+var chartOne = d3.select('#chart-one').append('svg')
 				.attr( 'width', width + '%' )
 				.attr( 'height', height )
 				.style( 'background', 'tomato')
@@ -39,7 +39,7 @@ var chart = d3.select('#chart-one').append('svg')
 				.selectAll('g').data(nhlData)
 				.enter().append('g')
 					
-chart.append("rect")
+chartOne.append("rect")
 	.style('fill', 'lightblue')
     .attr('width', barWidth)
     .attr('height', function(d){
@@ -66,7 +66,7 @@ chart.append("rect")
 	})
     
 
-chart.append("text")
+chartOne.append("text")
 	.attr('x', function( d, i ){ return i * (barWidth + barOffset) + 7})
 	.attr('y', function(d){
 		return height - yScale(d.W) + 15
