@@ -1,130 +1,42 @@
-var bardata = [] //[20, 30, 45, 15, 100, 20, 30, 45, 15, 100, 20, 30, 45, 15, 100, 20, 30, 45, 15, 100];
-var nhlData = {"Rank": 1, 
-				"Team": "Rangers", 
-				"GP":28, 
-				"W": 19, 
-				"L": 6, 
-				"OT": 3, 
-				"P": 41, 
-				"ROW": 18, 
-				"GF": 94, 
-				"GA": 63 }
+var bardata = [20, 30, 45, 15, 50];
+var nhlData = [{"Rank": 1, "Team": "Rangers", "GP":28, "W": 50, "L": 6, "OT": 3},
+				{"Rank": 2, "Team": "Islanders", "GP":28, "W": 6, "L": 19, "OT": 3},
+				{"Rank": 3, "Team": "Flyers", "GP":26, "W": 17, "L": 19, "OT": 3},
+				{"Rank": 4, "Team": "Bruins", "GP":28, "W": 35, "L": 19, "OT": 3},
+				{"Rank": 5, "Team": "Ducks", "GP":28, "W": 23, "L": 19, "OT": 3}]
 
 				
-for (var i = 0; i < 50; i++) {
-	bardata.push(Math.round(Math.random()*100) + 2);
-}
+// for (var i = 0; i < 50; i++) {
+// 	bardata.push(Math.round(Math.random()*100) + 2);
+// }
 
-bardata.sort(function(a,b){return a - b})
+// bardata.sort(function(a,b){return a - b})
 
-var margin = { top: 30, right:30, bottom:40, left:50 }
-
-
-var height = 400 - margin.top - margin.bottom,
-	width = 600 - margin.left - margin.right,
+var height = 400,
+	width = 100,
 	barWidth = 50,
 	barOffset = 5;
-
-var tempColor;
-
-var colors = d3.scale.linear()
-	.domain([0, bardata.length * .33, bardata.length * .66, bardata.length])
-	.range(['#B58929','#C61C6F', 'green', '#11AAFF'])
 
 var yScale = d3.scale.linear()
 		.domain( [ 0, d3.max(bardata) ] )
 		.range([0, height])
-var xScale = d3.scale.ordinal()
-		.domain(d3.range( 0, bardata.length ))
-		.rangeBands([0, width], 0.2, 1)
 
-var toolTip = d3.select('body').append('div')
-	.style('position', 'absolute')
-	.style('padding', '0 10px')
-	.style('background', 'white')
-	.style('opacity', 0)
-
-var myChart = d3.select('#chart').append('svg')
-		.style('background', '#C9D7D6')
-		.attr( 'width', width + margin.left + margin.right )
-		.attr( 'height', height + margin.top + margin.bottom )
-		.append('g')
-		.attr('transform', 'translate('+ margin.left +', '+ margin.top +')')
-		.selectAll('rect').data(bardata)
-		.enter().append('rect')
-			.style('fill', function(d, i){
-				return colors(i);
-			})
-			.attr('width', xScale.rangeBand())
-			.attr('x', function(d,i){
-				return xScale(i);
-			})
-			.attr('height', 0)
-			.attr('y', height)
-		.on('mouseover', function(d){
-
-			toolTip.transition()
-				.style('opacity', .9)
-
-			toolTip.html(d)
-				.style('left', (d3.event.pageX) + 'px')
-				.style('top', (d3.event.pageY-50) + 'px')
-
-			tempColor = this.style.fill;
-			d3.select(this)
-				.style('opacity', .5)
-				.style('fill', 'yellow')
-
-		})
-		.on('mouseout', function(d){
-			d3.select(this)
-				.style('opacity', 1)
-				.style('fill', tempColor)
-		})
-
-
-myChart.transition()
-	.attr('height', function(d){
-		return yScale(d);
-	})
-	.attr('y', function(d){
-		return height - yScale(d);
-	})
-	.delay(function(d, i){
-		return i * 20;
-	})
-	.duration(1000)
-	.ease('elastic')
-
-var vGuideScale = d3.scale.linear()
-	.domain([0, d3.max(bardata)])
-	.range([height, 0])
-
-var vAxis = d3.svg.axis()
-	.scale(vGuideScale)
-	.orient('left')
-	.ticks(10)
-
-var vGuide = d3.select('svg').append('g')
-	vAxis(vGuide)
-
-	vGuide.attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-	vGuide.selectAll('path')
-		.style({fill: 'none', stroke: '#000'})
-	vGuide.selectAll('line')
-		.style({fill: 'none', stroke: '#000'})
-
-var hAxis = d3.svg.axis()
-	.scale(xScale)
-	.orient('bottom')
-	.tickValues(xScale.domain().filter(function(d, i){
-		return !(i % (bardata.length/5));
-	}))
-
-var hGuide = d3.select('svg').append('g')
-	hAxis(hGuide)
-	hGuide.attr('transform', 'translate(' + margin.left + ', ' + (height + margin.top) + ')')
-	hGuide.selectAll('path')
-		.style({fill: 'none', stroke: '#000'})
-	hGuide.selectAll('line')
-		.style({fill: 'none', stroke: '#000'}) 
+var chart = d3.select('#chart').append('svg')
+				.attr( 'width', width + '%' )
+				.attr( 'height', height )
+				.style( 'background', 'tomato')
+				.style('padding', '10'+'px')
+				.selectAll('rect').data(nhlData)
+				.enter().append('rect')
+					.style('fill', 'lightblue')
+					.attr('width', barWidth)
+					.attr('height', function(d){
+						return yScale(d.W);
+					})
+					.attr('x', function( d, i){
+						return i * (barWidth + barOffset );
+					})
+					.attr('y', function(d){
+						console.log(d)
+						return height - yScale(d.W-5);
+					})
