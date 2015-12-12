@@ -6,3 +6,32 @@ body {
 	max-width: 960px;
 	margin: 0 auto;
 }
+
+
+
+
+/* FOR CHART TWO */
+.dots path {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis--y line {
+  stroke-opacity: 0.2;
+}
+
+.axis--y path {
+  stroke: none;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
